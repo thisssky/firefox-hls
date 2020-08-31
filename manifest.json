@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "hls",
+  "description": "hls",
+  "version": "0.0.1",
+  "icons": {
+    "64": "icons/icon.png"
+  },
+  "permissions": [
+    "webRequest",
+	"webRequestBlocking",
+    "<all_urls>",
+	"nativeMessaging",
+	"downloads",
+	"geolocation",
+	"geolocation",
+	"notifications"
+  ],
+  "background": {
+	"scripts": ["request_scripts.js","notifications.js"]
+  },
+  "browser_action": {
+    "default_icon": {
+      "64": "icons/icon.png"
+    },
+	"browser_style": true,
+    "default_popup": "popup/main.html",
+	"default_title": "HLS"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ]
+}
+
+
+//"default_area": "navbar",
+//"navbar":"该按钮位于主浏览器工具栏中，与URL栏相邻",
+//"menupanel":"该按钮位于弹出面板中",
+//"tabstrip":"按钮位于包含浏览​​器选项卡的工具栏中",
+//"personaltoolbar":"该按钮位于书签工具栏中"
