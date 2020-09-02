@@ -1,7 +1,4 @@
-/*
-If the click was on a link, send a message to the background page.
-The message contains the link's URL.
-*/
+
 function notifyExtension(e) {
   var target = e.target;
   while ((target.tagName != "A" || !target.href) && target.parentNode) {
@@ -9,10 +6,14 @@ function notifyExtension(e) {
   }
   if (target.tagName != "A")
     return;
-  browser.runtime.sendMessage({"url": target.href});
-}
 
-/*
-Add notifyExtension() as a listener to click events.
-*/
+  browser.runtime.sendMessage({"createNotification":"createNotification","url": target.href});
+}
 window.addEventListener("click", notifyExtension);
+
+
+//content-script<-------sendmessage----->backgroundjs
+//content_script<--------window.postMessage--->个人页面
+//https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#Communicating_with_background_scripts
+//https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension#Background_scripts
+//https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json
