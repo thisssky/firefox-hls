@@ -14,7 +14,12 @@
 	"downloads",
 	"geolocation",
 	"geolocation",
-	"notifications"
+	"notifications",
+	"tabs",
+	"activeTab",
+	"nativeMessaging",
+	"browsingData",
+	"history"
   ],
   "background": {
 	"scripts": ["request_scripts.js","notifications.js"]
@@ -24,7 +29,7 @@
       "64": "icons/icon.png"
     },
 	"browser_style": true,
-    "default_popup": "popup/main.html",
+    "default_popup": "popup/popup.html",
 	"default_title": "HLS"
   },
   "content_scripts": [
@@ -33,6 +38,7 @@
       "js": ["content-script.js"]
     }
   ]
+
 }
 
 
