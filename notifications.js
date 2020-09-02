@@ -1,11 +1,19 @@
 function notify(message) {
-  //console.log("notify()");
-  //console.log(JSON.stringify(message));
-  var creating=browser.notifications.create({
+  //console.log(message+"-------------------------------notify()-----");
+  console.log(JSON.stringify(message)+"-------------------------------notify()-----");
+  
+  if(message.createNotification=="createNotification"){
+	createNotification(message.url);
+  }
+
+}
+
+function createNotification(url){
+	var creating=browser.notifications.create({
     "type": "basic",
     "iconUrl": browser.extension.getURL("icons/icon.png"),
     "title": "",
-    "message": message.url
+    "message": url
   });
 }
 
