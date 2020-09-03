@@ -17,19 +17,19 @@
 	"notifications",
 	"tabs",
 	"activeTab",
-	"nativeMessaging",
-	"browsingData",
+	"storage",
+	"unlimitedStorage",
 	"history"
   ],
   "background": {
-	"scripts": ["request_scripts.js","notifications.js"]
+	"scripts": ["background/request_scripts.js","background/notifications.js"]
   },
   "browser_action": {
     "default_icon": {
       "64": "icons/icon.png"
     },
 	"browser_style": true,
-    "default_popup": "popup/popup.html",
+    //"default_popup": "record.html",
 	"default_title": "HLS"
   },
   "content_scripts": [

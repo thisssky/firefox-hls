@@ -1,0 +1,19 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+.rowDiv {
+  width: 100%;
+  padding: 4px;
+  font-size: 1.5em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.rowDiv:hover {
+  background-color: #CFF2F2;
+}
+:hover{
+	
+}
