@@ -2,20 +2,17 @@
 
 <html>
 	<head>
-    <meta charset="utf-8">
-	<link rel="stylesheet" href="record.css"/>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="record.css"/>
 	</head>
 <body>
-<!--
-https://github.com/mdn/webextensions-examples/tree/master/quicknote/popup
--->
-	<div><a id="all">查询</a><a id="clear">清空</a><div>
-	<div class="rowDiv">developer.mozilla.org</div>
-	<div class="rowDiv">support.mozilla.org</div>
-	<div class="rowDiv">ddons.mozilla.org<</div>
-	<div class="rowDiv" id="te">popup/popup.html</div>
-	<div class="rowDiv" id="permissions"></div>
-  
+	
+	<div class="buttonContainer">
+		<div id="all" class="optButton">查询</div>
+		<div id="clear" class="optButton">清空</div>
+	</div>
+
+	<div id="container"></div>
 	<script src="record.js"></script>
 </body>
 </html>
