@@ -1,16 +1,21 @@
+/*
+启动，连接原生应用
+*/
+var port="";
+
+function downloadOpt(obj){
+	if(""==port){
+		port = browser.runtime.connectNative("m3u8");
+	}
+	var url=obj.getAttribute("url");
+	port.postMessage({"type":"download","url":url});
+}
+
 function init() {
-
-    // browser.permissions.getAll().then((permissions) => {
-    // document.getElementById('permissions').innerText = permissions.permissions.join(', ');
-    // document.body.style.border = "5px solid green";
-    // addHTML(permissions.permissions.join(', '));
-    // });
-
     document.getElementById("queryButton").addEventListener("click", getAll);
-    document.getElementById("copyButton").addEventListener("click", copy);
+    //document.getElementById("copyButton").addEventListener("click", copy);
     document.getElementById("clearButton").addEventListener("click", clearAll);
-
-    //window.addEventListener("click", md);
+	//document.getElementById("dwo").addEventListener("click", downloadOpt);
     getAll();
 }
 //初始化
@@ -48,7 +53,7 @@ function getAll() {
             mms.push(results[uid].mm);
         }
         quickSort(mms, 0, mms.length);
-
+		mms.reverse();
         for (var i = 0; i < mms.length; i++) {
             addTR(i + 1, getValue(obj, mms[i]), mms[i]);
         }
@@ -73,45 +78,64 @@ function copy() {
 }
 
 function addTR(index, url, mm) {
-    var rdiv = document.createElement("div");
-    rdiv.innerHTML = "删除";
-    rdiv.setAttribute("key", url);
-    rdiv.className = "removeButton";
-    rdiv.addEventListener("click", function () {
+	var indexTd = document.createElement("td");
+    indexTd.style.textAlign = "right";
+    indexTd.innerHTML = index;
+	
+	// var pageA = document.createElement("a");
+	// pageA.href="http://www.baidu.com";
+	// pageA.target="blank";
+	// pageA.innerHTML="http://www.baidu.com";
+    // var pageTd = document.createElement("td");
+    // pageTd.appendChild(pageA);
+	
+    var urlDiv = document.createElement("div");
+    urlDiv.className = "showURL";
+    urlDiv.innerHTML = url;
+    var urlTd = document.createElement("td");
+    urlTd.style.position = "relative";
+    urlTd.appendChild(urlDiv);
+
+	var timeTd = document.createElement("td");
+    timeTd.style.textAlign = "left";
+	timeTd.style.whiteSpace="nowrap";
+	timeTd.style.paddingLeft="5px";
+	timeTd.style.paddingRight="5px";
+
+    var datetime = getDateTime(mm, "yyyy-MM-dd hh:mm:ss:S");
+    timeTd.innerHTML = datetime.substring(11);
+	timeTd.title=datetime.substring(0,11);
+	
+	var downloadDiv = document.createElement("div");
+    downloadDiv.innerHTML = "下载";
+    downloadDiv.setAttribute("url", url);
+    downloadDiv.className = "removeButton";
+    downloadDiv.addEventListener("click", function () {
+		downloadOpt(this);
+    });
+    var downloadTd = document.createElement("td");
+    downloadTd.appendChild(downloadDiv);
+	
+    var deleteDiv = document.createElement("div");
+    deleteDiv.innerHTML = "删除";
+    deleteDiv.setAttribute("url", url);
+    deleteDiv.className = "removeButton";
+    deleteDiv.addEventListener("click", function () {
         updateRowIndex(this);
         removeOpt(this);
     });
-    var fourtd = document.createElement("td");
-    fourtd.appendChild(rdiv);
-
-    var ttd = document.createElement("td");
-    ttd.style.textAlign = "center";
-    var datetime = getDateTime(mm, "yyyy-MM-dd hh:mm:ss:S");
-    ttd.innerHTML = datetime;
-
-    var urldiv = document.createElement("div");
-    //urldiv.style.position="absolute";
-    //urldiv.style.left="0px";
-    //urldiv.style.top="0px";
-    //urldiv.style.whiteSpace="nowrap";
-    urldiv.className = "showURL";
-    urldiv.innerHTML = url;
-    var std = document.createElement("td");
-    //std.style.overflow="hidden";
-    std.style.position = "relative";
-    std.appendChild(urldiv);
-
-    var firsttd = document.createElement("td");
-    firsttd.style.textAlign = "right";
-    firsttd.innerHTML = index;
+    var deleteTd = document.createElement("td");
+    deleteTd.appendChild(deleteDiv);
 
     var table = document.getElementsByTagName("table")[0];
     var tr = document.createElement("tr");
     tr.className = "rowDiv";
-    tr.appendChild(firsttd);
-    tr.appendChild(std);
-    tr.appendChild(ttd);
-    tr.appendChild(fourtd);
+    tr.appendChild(indexTd);
+	// tr.appendChild(pageTd);
+    tr.appendChild(urlTd);
+    tr.appendChild(timeTd);
+	tr.appendChild(downloadTd);
+    tr.appendChild(deleteTd);
     table.appendChild(tr);
 }
 
@@ -130,7 +154,7 @@ function removeOpt(obj) {
     var tr = obj.parentNode.parentNode;
     table.removeChild(tr);
     //删除存储
-    browser.storage.local.remove(obj.getAttribute("key"));
+    browser.storage.local.remove(obj.getAttribute("url"));
     //是否显示无数据
     if (table.childNodes.length == 2) {
         document.getElementById("noContent").style.display = "table-row";

@@ -6,13 +6,18 @@
   "icons": {
     "64": "icons/icon.png"
   },
+    "applications": {
+    "gecko": {
+      "id": "hls@hls.org",
+      "strict_min_version": "50.0"
+    }
+  },
   "permissions": [
     "webRequest",
 	"webRequestBlocking",
     "<all_urls>",
 	"nativeMessaging",
 	"downloads",
-	"geolocation",
 	"geolocation",
 	"notifications",
 	"tabs",
@@ -40,10 +45,3 @@
   ]
 
 }
-
-
-//"default_area": "navbar",
-//"navbar":"该按钮位于主浏览器工具栏中，与URL栏相邻",
-//"menupanel":"该按钮位于弹出面板中",
-//"tabstrip":"按钮位于包含浏览​​器选项卡的工具栏中",
-//"personaltoolbar":"该按钮位于书签工具栏中"

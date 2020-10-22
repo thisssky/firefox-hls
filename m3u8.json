@@ -1,0 +1,7 @@
+{
+"name": "m3u8",
+  "description": "HLS native messaging",
+  "path": "m3u8.bat",
+  "type": "stdio",
+  "allowed_extensions": [ "hls@hls.org" ]
+}

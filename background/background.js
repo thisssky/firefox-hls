@@ -145,7 +145,7 @@ function notificationListener(message) {
     }
 }
 //监听通知消息
-browser.runtime.onMessage.addListener(notificationListener);
+//browser.runtime.onMessage.addListener(notificationListener);
 
 //关闭通知
 function closeNotification(id) {
@@ -154,7 +154,7 @@ function closeNotification(id) {
     }, 3000);
 }
 //监听通知显示事件
-browser.notifications.onShown.addListener(closeNotification);
+//browser.notifications.onShown.addListener(closeNotification);
 
 function remain() {
 

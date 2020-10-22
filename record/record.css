@@ -5,7 +5,7 @@ html, body,div {
 
 .buttonContainer{
 	margin:0 auto;
-	width:400px;
+	width:300px;
 	height:100px;
 }
 
@@ -16,7 +16,7 @@ html, body,div {
     font-size: 24px;
 	border-radius:4px;
 	display:inline-block;
-	margin:30px 20px 10px 40px;
+	margin:30px 0px 0px 60px;
 	text-align:center;
 	-webkit-user-select:none;
     -moz-user-select:none;
@@ -61,9 +61,11 @@ html, body,div {
 .removeButton{
 	background-color: #4CAF50;
 	color: white;
+	width: 60px;
     font-size: 24px;
 	border-radius:4px;
 	text-align:center;
+	display:inline-block;
 	-webkit-user-select:none;
     -moz-user-select:none;
     -ms-user-select:none;
@@ -79,6 +81,7 @@ html, body,div {
 .removeButton:active{
 	background-color:#73fc80;
 }
+
 table {
 	width:100%;
 	border-right:solid 1px red;
@@ -94,6 +97,10 @@ td{
 	padding:0;
 	border-left:solid 1px red;
 	border-top:solid 1px red;
+}
+
+td>a{
+	text-decoration:none;
 }
 /* td:hover { */
 	/* background-color: red; */

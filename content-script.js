@@ -11,4 +11,4 @@ function notifyExtension(e) {
         "url": target.href
     });
 }
-window.addEventListener("click", notifyExtension);
+//window.addEventListener("click", notifyExtension);
