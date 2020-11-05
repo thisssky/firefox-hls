@@ -19,11 +19,11 @@
 			<th style="width:60px;">删除</th>
 		</tr>
 		
-		<tr id="noContent" style="display:table-row;">
-			<td style="height:400px;margin:0 auto;border-left:solid 1px red;border-top:solid 1px red;"  colspan=5>
-				<div style="text-align:center;font-size:72px;">没有数据!</div>
-			</td>
-		</tr>
+		<!-- <tr id="noContent" style="display:table-row;"> -->
+			<!-- <td style="height:400px;margin:0 auto;border-left:solid 1px red;border-top:solid 1px red;"  colspan=5> -->
+				<!-- <div style="text-align:center;font-size:72px;">没有数据!</div> -->
+			<!-- </td> -->
+		<!-- </tr> -->
 	
       <!-- <tr class="rowDiv"> -->
         <!-- <td style="text-align:right;">2</td> -->
@@ -53,7 +53,9 @@
         <!-- <td><div class="removeButton">删除</div></td> -->
       <!-- </tr> -->
     </table>
-		
+	<div id="noContentContainer" style="border-left:red 1px solid;border-right:1px red solid;border-bottom:1px red solid;">
+		<div id="noContent" style="font-size:72px;height:100px;display:inline-block;width:360px;text-align:center;">没有数据!</div>
+	</div>
 	<textarea id="copyContent" style="top:-99999px;position:absolute;opacity:0.0;width:1px;height:1px;"></textarea>
     <script src="record.js"></script>
 

@@ -11,16 +11,36 @@ function downloadOpt(obj){
 	port.postMessage({"type":"download","url":url});
 }
 
+
+
+window.onresize = function(){
+ resizeContent();
+}
+
 function init() {
     document.getElementById("queryButton").addEventListener("click", getAll);
     //document.getElementById("copyButton").addEventListener("click", copy);
     document.getElementById("clearButton").addEventListener("click", clearAll);
 	//document.getElementById("dwo").addEventListener("click", downloadOpt);
-    getAll();
+	resizeContent();
+	getAll();
 }
 //初始化
 init();
 
+function resizeContent(){
+	var h = window.innerHeight
+|| document.documentElement.clientHeight
+|| document.body.clientHeight;
+var w = window.innerWidth
+|| document.documentElement.clientWidth
+|| document.body.clientWidth;
+console.log("h:"+h);
+document.getElementById("noContentContainer").style.height=h-130-2+"px";
+document.getElementById("noContent").style.marginTop=(h-130-2)/2-50+"px";
+document.getElementById("noContent").style.marginLeft=(w-2)/2-180+"px";
+
+}
 function setItem(obj, key, value) {
     obj[key] = value;
     return obj;
@@ -31,7 +51,7 @@ function getValue(obj, key) {
 }
 
 function getAll() {
-    document.getElementById("noContent").style.display = "none";
+    document.getElementById("noContentContainer").style.display = "none";
 
     var removeButton = document.getElementsByClassName("removeButton");
     for (var i = 0; i < removeButton.length; i++) {
@@ -43,7 +63,7 @@ function getAll() {
         //{"sss":{mm:mm,url:url},"yyy":{mm:mm,url:url}}
         var arr = Object.keys(results);
         if (arr.length == 0) {
-            document.getElementById("noContent").style.display = "table-row";
+            document.getElementById("noContentContainer").style.display = "block";
         }
         var obj = {};
         var mms = [];
@@ -157,7 +177,7 @@ function removeOpt(obj) {
     browser.storage.local.remove(obj.getAttribute("url"));
     //是否显示无数据
     if (table.childNodes.length == 2) {
-        document.getElementById("noContent").style.display = "table-row";
+        document.getElementById("noContentContainer").style.display = "block";
     }
 }
 

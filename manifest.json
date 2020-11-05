@@ -6,10 +6,9 @@
   "icons": {
     "64": "icons/icon.png"
   },
-    "applications": {
+	"applications": {
     "gecko": {
-      "id": "hls@hls.org",
-      "strict_min_version": "50.0"
+      "id": "hls@hls.org"
     }
   },
   "permissions": [
