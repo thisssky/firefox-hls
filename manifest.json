@@ -1,46 +1,53 @@
 {
-  "manifest_version": 2,
-  "name": "HLS",
-  "description": "HLS",
-  "version": "0.0.2",
-  "icons": {
-    "64": "icons/icon.png"
-  },
+	"manifest_version": 2,
+	"name": "HLS",
+	"description": "HLS",
+	"version": "0.0.2",
+	"developer": {
+		"name": "qq1217268470",
+		"url": "https://github.com/1217268470/webextensions-hls"
+	},
+	"icons": {
+		"64": "icons/icon.png"
+	},
 	"applications": {
-    "gecko": {
-      "id": "hls@hls.org"
-    }
-  },
-  "permissions": [
-    "webRequest",
-	"webRequestBlocking",
-    "<all_urls>",
-	"nativeMessaging",
-	"downloads",
-	"geolocation",
-	"notifications",
-	"tabs",
-	"activeTab",
-	"storage",
-	"unlimitedStorage",
-	"history"
-  ],
-  "background": {
-	"scripts": ["background/background.js"]
-  },
-  "browser_action": {
-    "default_icon": {
-      "64": "icons/icon.png"
-    },
-	"browser_style": true,
-    //"default_popup": "record.html",
-	"default_title": "HLS"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content-script.js"]
-    }
-  ]
-
+		"gecko": {
+			"id": "hls@hls.org"
+		}
+	},
+	"permissions": [
+		"webRequest",
+		"webRequestBlocking",
+		"<all_urls>",
+		"nativeMessaging",
+		"devtools",
+		"downloads",
+		"geolocation",
+		"notifications",
+		"tabs",
+		"activeTab",
+		"storage",
+		"unlimitedStorage",
+		"history",
+		"menus",
+		"contextMenus",
+		"find"
+	],
+	"background": {
+		"scripts": ["background/background.js"]
+	},
+	"browser_action": {
+		"default_icon": {
+			"64": "icons/icon.png"
+		},
+		"browser_style": true,
+		"default_popup": "popup/popup.html",
+		"default_title": "HLS"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content-script.js"]
+		}
+	]
 }

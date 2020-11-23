@@ -58,20 +58,6 @@ function quickSort(A, p = 0, r) {
     return A;
 }
 
-
-/*
-启动，连接原生应用
-*/
-var port="";
-
-function downloadOpt(obj){
-	if(""==port){
-		port = browser.runtime.connectNative("m3u8");
-	}
-	var url=obj.getAttribute("url");
-	port.postMessage({"type":"download","url":url});
-}
-
 function updateRowIndex(obj) {
     var tr = obj.parentNode.parentNode;
     var next = tr.nextSibling;
@@ -87,24 +73,46 @@ function removeOpt(obj) {
     var tr = obj.parentNode.parentNode;
     table.removeChild(tr);
     //删除存储
-    browser.storage.local.remove(obj.getAttribute("url"));
+	var ad="ad";
+	browser.storage.local.get(ad).then((results) => {
+		var robj=results[ad];
+		if(undefined!=robj){
+			var durl=obj.getAttribute("url");
+			if(robj.hasOwnProperty(durl)){
+				delete robj[durl];
+			}
+			browser.storage.local.set({ad:robj});		
+		}
+	});
+	
     //是否显示无数据
     if (table.childNodes.length == 2) {
         document.getElementById("noContentContainer").style.display = "block";
     }
 }
 
-function addTR(index, url, mm) {
+function addTR(index, ws, url, mm) {
+	var table = document.getElementById("datagrid");
+    var tr = document.createElement("tr");
+    tr.className = "rowDiv";
+    table.appendChild(tr);
+	
 	var indexTd = document.createElement("td");
     indexTd.style.textAlign = "right";
     indexTd.innerHTML = index;
-	
-	// var pageA = document.createElement("a");
-	// pageA.href="http://www.baidu.com";
-	// pageA.target="blank";
-	// pageA.innerHTML="http://www.baidu.com";
-    // var pageTd = document.createElement("td");
-    // pageTd.appendChild(pageA);
+	tr.appendChild(indexTd);
+
+    var websiteTd = document.createElement("td");
+	//websiteTd.style.position = "relative";
+	websiteTd.innerHTML=ws;
+	//websiteTd.style.whiteSpace = "nowrap";
+	//websiteTd.style.overflow = "hidden";
+	websiteTd.style.width = "100px";
+	var wbDiv = document.createElement("div");
+    wbDiv.className = "showURL";
+    wbDiv.innerHTML = ws;
+	//websiteTd.appendChild(wbDiv);
+    tr.appendChild(websiteTd);
 	
     var urlDiv = document.createElement("div");
     urlDiv.className = "showURL";
@@ -112,27 +120,18 @@ function addTR(index, url, mm) {
     var urlTd = document.createElement("td");
     urlTd.style.position = "relative";
     urlTd.appendChild(urlDiv);
+    tr.appendChild(urlTd);
 
 	var timeTd = document.createElement("td");
     timeTd.style.textAlign = "left";
 	timeTd.style.whiteSpace="nowrap";
 	timeTd.style.paddingLeft="5px";
 	timeTd.style.paddingRight="5px";
-
     var datetime = getDateTime(mm, "yyyy-MM-dd hh:mm:ss:S");
     timeTd.innerHTML = datetime.substring(11);
 	timeTd.title=datetime.substring(0,11);
-	
-	var downloadDiv = document.createElement("div");
-    downloadDiv.innerHTML = "下载";
-    downloadDiv.setAttribute("url", url);
-    downloadDiv.className = "removeButton";
-    downloadDiv.addEventListener("click", function () {
-		downloadOpt(this);
-    });
-    var downloadTd = document.createElement("td");
-    downloadTd.appendChild(downloadDiv);
-	
+	tr.appendChild(timeTd);
+
     var deleteDiv = document.createElement("div");
     deleteDiv.innerHTML = "删除";
     deleteDiv.setAttribute("url", url);
@@ -143,28 +142,9 @@ function addTR(index, url, mm) {
     });
     var deleteTd = document.createElement("td");
     deleteTd.appendChild(deleteDiv);
-
-    var table = document.getElementsByTagName("table")[0];
-    var tr = document.createElement("tr");
-    tr.className = "rowDiv";
-    tr.appendChild(indexTd);
-	// tr.appendChild(pageTd);
-    tr.appendChild(urlTd);
-    tr.appendChild(timeTd);
-	tr.appendChild(downloadTd);
     tr.appendChild(deleteTd);
-    table.appendChild(tr);
 }
 
-function setProperty(obj, key, value) {
-    obj[key] = value;
-    return obj;
-}
-
-function getValue(obj, key) {
-    var v = obj[key];
-    return v;
-}
 
 function clearAllContent() {
 	var removeButton = document.getElementsByClassName("removeButton");
@@ -178,99 +158,48 @@ function clearAllContent() {
 		}
         i = i - 1;
     }
-    
 }
 
 function getAll() {
 	clearAllContent();
     document.getElementById("noContentContainer").style.display = "none";
-	
-    var gettingAllStorageItems = browser.storage.local.get();
-    gettingAllStorageItems.then((results) => {
-        //{"sss":{mm:mm,url:url},"yyy":{mm:mm,url:url}}
-		//过滤隐藏
-		var fh="ad";
-		if(results.hasOwnProperty(fh)){
-			delete results[fh];
-		}
-        var arr = Object.keys(results);
-        if (arr.length == 0) {
-            document.getElementById("noContentContainer").style.display = "block";
-        }
-        var obj = {};
-        var mms = [];
-        for (var i = 0; i < arr.length; i++) {
-            var uid = arr[i];
-            setProperty(obj, results[uid].mm, results[uid].url);
-            mms.push(results[uid].mm);
-        }
-        quickSort(mms, 0, mms.length);
-		mms.reverse();
-        for (var i = 0; i < mms.length; i++) {
-            addTR(i + 1, getValue(obj, mms[i]), mms[i]);
-        }
 
+	var ad="ad";
+    var gettingAllStorageItems = browser.storage.local.get(ad);
+    gettingAllStorageItems.then((results) => {
+		if(results.hasOwnProperty(ad)){
+			var urls = Object.keys(results[ad]);
+			if (urls.length == 0) {
+				document.getElementById("noContentContainer").style.display = "block";
+			}
+			//ad {ad:{ws:{js:mm}}}
+
+			var arr = [];
+			for (var i = 0; i < urls.length; i++) {
+				var url = urls[i];
+				var sobj = results[ad][url];//{js:mm}
+				for(k in sobj){
+					var obj={};
+					obj.ws=url;
+					obj.url=k;
+					obj.mm=sobj[k];
+					arr.push(obj);
+				}
+			}
+			
+			for (var i = 0; i < arr.length; i++) {
+				//index ws url mm
+				addTR(i + 1, arr[i].ws,arr[i].url,arr[i].mm);
+			}
+		}else{
+			document.getElementById("noContentContainer").style.display = "block";
+		}
     });
 }
 
 function clearAll() {
-	var gettingAllStorageItems = browser.storage.local.get();
-    gettingAllStorageItems.then((results) => {
-		//过滤js
-		var fh="ad";
-		if(results.hasOwnProperty(fh)){
-			delete results[fh];
-		}
-		
-		var arr = Object.keys(results);
-		// for (var i = 0; i < arr.length; i++) {
-			// browser.storage.local.remove(arr[i]);
-		// }
-		if(arr.length>0){
-			browser.storage.local.remove(arr);
-		}
-	});
+    browser.storage.local.remove("ad");
     clearAllContent();
-}
-
-function copy() {
-    var cv = document.getElementById("copyContent");
-    var divs = document.getElementsByClassName("showURL");
-    var v = "";
-    for (var i = 0; i < divs.length; i++) {
-        v += divs[i].innerHTML;
-        if (i != divs.length - 1) {
-            v += "\r\n";
-        }
-    }
-    cv.value = v;
-    cv.select();
-    document.execCommand("copy");
-    alert("已复制到粘贴板!");
-}
-
-var fullSelected = false;
-function md(e) {
-    if (!e) {
-        e = window.event;
-    }
-    var selection = window.getSelection();
-    if (e.target.className == "rowDiv") {
-        var range = document.createRange();
-        range.selectNodeContents(e.target);
-        selection.addRange(range);
-    } else {
-        if (!fullSelected) {
-            var range = document.createRange();
-            var se = document.getElementById("container");
-            range.selectNodeContents(se);
-            selection.addRange(range);
-            fullSelected = true;
-        } else {
-            selection.removeAllRanges();
-            fullSelected = false;
-        }
-    }
 }
 
 function resizeContent(){
@@ -287,12 +216,9 @@ window.onresize = function(){
 
 function init() {
     document.getElementById("queryButton").addEventListener("click", getAll);
-    //document.getElementById("copyButton").addEventListener("click", copy);
     document.getElementById("clearButton").addEventListener("click", clearAll);
-	//document.getElementById("dwo").addEventListener("click", downloadOpt);
 	resizeContent();
 	getAll();
 }
-
 //初始化
 init();

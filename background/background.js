@@ -9,13 +9,36 @@ function logURL(requestDetails) {
     if (requestDetails.url.indexOf(".flv") != -1) {
         save2(requestDetails.url, "flv");
     }
-    //Access-Control-Allow-Origin: <origin> | *
 }
-//监听所有url请求
-chrome.webRequest.onBeforeRequest.addListener(
-    logURL, {
-    urls: ["<all_urls>"]
-});
+browser.webRequest.onBeforeRequest.addListener(logURL, {urls: ["<all_urls>"]});
+
+//初始化广告js
+var blockjs=[];
+function initBlockJS(){
+	//blockjs.push("https://v1.cnzz.com/z_stat.php?id=1278295498&web_id=1278295498");
+	blockjs.push("https://www.zxzj.me/slade1.js");
+	//blockjs.push("https://www.zxzj.me/slade2.js");
+	blockjs.push("https://3193.dlads.cn/alikes.php?id=6001");
+
+	blockjs.push("https://1274.dlads.cn/alikes.php?id=3103");
+
+	blockjs.push("https://pc.weizhenwx.com/pc_w/m_beitou.js");
+	blockjs.push("https://pc.weizhenwx.com/pc_w/m_rich.js");
+
+	blockjs.push("*://*/dm/ahead.js?v1");
+	blockjs.push("https://www.aassy19.com/dm/dingbu.js?v1=");
+	blockjs.push("https://www.aassy19.com/dm/dibu.js?v1=");
+	blockjs.push("https://hm.baidu.com/hm.js?0acbdd45de8598c27c20c14db605ac92=");
+	blockjs.push("https://www.pppf-dm.com/dm/bofangxia.js?v1");
+}
+initBlockJS();
+
+//过滤广告js
+function blockJS(requestDetails) {
+	console.log(requestDetails.url+"===========blockJS");
+	return {cancel: true};
+}
+//browser.webRequest.onBeforeRequest.addListener(blockJS, {urls: blockjs},["blocking"]);
 
 //进入record页面
 function openRecord(tabs) {
@@ -24,9 +47,6 @@ function openRecord(tabs) {
             "url": browser.extension.getURL("record/record.html")
         });
     } else {
-        browser.tabs.move(tabs[0].id, {
-            "index": 0
-        });
         browser.tabs.highlight({
             "tabs": tabs[0].index
         });
@@ -80,10 +100,10 @@ function save(url) {
     });
 
 }
-function item(key, value) {
-    var item = {};
-    item[key] = value;
-    return item;
+function setProperty(key, value) {
+    var obj = {};
+    obj[key] = value;
+    return obj;
 }
 
 var urls = {};
@@ -125,8 +145,10 @@ function save2(url, type) {
         //去重
         checkExist(url);
     }
-    var resu = item(url, p);
-    browser.storage.local.set(resu);
+    var item = setProperty(url, p);
+	// var item={};
+	// item[url]=p;
+    browser.storage.local.set(item);
 }
 
 //创建通知
@@ -156,37 +178,47 @@ function closeNotification(id) {
 //监听通知显示事件
 //browser.notifications.onShown.addListener(closeNotification);
 
-function remain() {
-
-    //https://github.com/mdn/webextensions-examples/tree/master/quicknote/popup
-
-    //content-script<-------sendmessage----->backgroundjs
-    //content_script<--------window.postMessage--->个人页面
-    //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts#Communicating_with_background_scripts
-    //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension#Background_scripts
-    //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json
-    //browser.runtime.getURL
-    //browser.tabs.create({
-    //url: browser.extension.getURL("record.html")
-    //});
-    //displayNote(noteKey,curValue);
-    //browser.tabs.executeScript(tid,{"code":'document.body.style.border = "5px solid green"'});
-    //var execode="var div=document.createElement(\"div\");div.className=\"page-choice\";div.textContent=\"ssssssss\";document.body.appendChild(div);";
-    //browser.tabs.executeScript(tid,{"code":execode});
-
-    //let executing=browser.tabs.executeScript(tabId,{"code":'document.body.style.border = "5px solid green"'});
-    //var exturl=browser.extension.getURL("popup/main.js");
-    //console.log(exturl+"--------------");
-
-
-    //let executing=browser.tabs.executeScript(tabId,{"file":"popup/main.js"});
-
-    // executing.then(()=>{
-    // browser.tabs.sendMessage(id,{"url": url});
-    // });
-    // .then(response=>{
-    // console.log(response);
-    // }).catch(error=>{
-    // console.log(error+"------error----");
-    // });
+//创建菜单
+browser.contextMenus.create({
+    "id" : "hlsHiddenMenu",
+    "title" : "隐藏此元素",
+    "contexts" : ["all"]
+});
+//监听菜单
+function clickMenu(info,tab){
+	browser.tabs.sendMessage(tab.id,{"type":"hidden","pageUrl":info.pageUrl});
 }
+browser.contextMenus.onClicked.addListener(clickMenu);
+
+var myCode="function getBySrc(src){var imgs=document.images;var parents=[];	for(var i=0,len=imgs.length;i<len;i++){if(src==imgs[i].src){var pn=getParent(imgs[i]);pn.style.display=\"none\";break;}}}";
+myCode+="function getByHref(href){var links=document.links;var parents=[];for(var i=0,len=links.length;i<len;i++){if(href==links[i].href){var pn=getParent(links[i]);pn.style.display=\"none\";break;}}}";
+myCode+="function getParent(node){var bn=document.body;	while(node.parentNode!=bn){node=node.parentNode;}return node;}";
+
+function onUpdated(tabId,changeInfo,tabInfo){
+	//console.log("New tab Info: "+tabId);
+	//console.log(tabInfo);
+	
+	// var ad="hrefsrc";
+    // var gettingAllStorageItems = browser.storage.local.get(ad);
+    // gettingAllStorageItems.then((results) => {
+		// if(results.hasOwnProperty(ad)){
+			// var urls = Object.keys(results[ad]);
+			// for (var i = 0; i < urls.length; i++) {
+				
+				// if(tabInfo.url.indexOf(results[ad][urls[i]].website)!=-1){
+					// console.log(urls[i]);
+					// console.log(results[ad][urls[i]]);
+					// console.log(i);
+					// browser.tabs.sendMessage(tabId,{"type":"hidden","href":urls[i],"src":urls[i]});
+					
+					// var para="getBySrc(\""+urls[i]+"\");"+"getByHref(\""+urls[i]+"\");";
+					// browser.tabs.executeScript({
+						// code: myCode+para
+					// });
+				// }
+			// }
+		// }
+	// });
+	
+}
+//browser.tabs.onUpdated.addListener(onUpdated);

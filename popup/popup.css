@@ -1,0 +1,33 @@
+html, body,div {
+  padding: 0;
+  margin: 0;
+}
+
+.buttonContainer{
+	margin:0 auto;
+	width:100px;
+}
+
+.pageButton{
+	background-color: #4CAF50; /* Green */
+	width:60px;
+    color: white;
+    font-size: 24px;
+	border-radius:4px;
+	display:inline-block;
+	margin:20px 20px 20px 20px;
+	text-align:center;
+	-webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+.pageButton:hover{
+	background-color:#90EE90;
+	color:red;
+	cursor: pointer;
+}
+.pageButton:active{
+	background-color:#73fc80;
+}

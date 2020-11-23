@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/record/record.css" />
+    <title>Advertisement</title>
+  </head>
+  <body>
+    <div class="buttonContainer">
+		<div id="queryButton" class="optButton">查询</div><div id="clearButton" class="optButton">清空</div>
+	</div>
+    <table id="datagrid">
+		<tr style="height:30px;">
+			<th style="width:40px;">#</th>
+			<th style="min-width:100px;width:200px;">Website</th>
+			<th>URL</th>
+			<th style="width:150px;">创建时间</th>
+			<th style="width:60px;">删除</th>
+		</tr>
+		
+		<!-- <tr class="rowDiv"> -->
+			<!-- <td style="text-align:right;">2</td> -->
+			<!-- <td style="width:100px;">https://www.xxx.com</td> -->
+			<!-- <td style="position:relative;"><div class="showURL">https://www.xxx.com/sadfasdfa/1000kb/hls/index.m3u8asdfsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</div></td> -->
+			<!-- <td style="text-align:left;white-space:nowrap;padding-left:5px;padding-right:5px;">20:01:23:023</td> -->
+			<!-- <td> -->
+			  <!-- <div class="removeButton">删除</div> -->
+			<!-- </td> -->
+		<!-- </tr> -->
+	  
+    </table>
+	<div id="noContentContainer" style="border-left:red 1px solid;border-right:1px red solid;border-bottom:1px red solid;">
+		<div id="noContent" style="font-size:72px;height:100px;display:inline-block;width:360px;text-align:center;">没有数据!</div>
+	</div>
+    <script src="advertisement.js"></script>
+
+  </body>
+</html>
