@@ -14,12 +14,12 @@ function notifyExtension(e) {
 //window.addEventListener("click", notifyExtension);
 
 //隐藏操作
-function hideOpt(msg){
+function hideOpt(info){
 	var datenow = new Date();
 	var mm = datenow.getTime();
-	var li=msg.pageUrl.indexOf("://");
-	var pre=msg.pageUrl.substring(0,li+3);
-	var suffix=msg.pageUrl.substring(li+3);
+	var li=info.pageUrl.indexOf("://");
+	var pre=info.pageUrl.substring(0,li+3);
+	var suffix=info.pageUrl.substring(li+3);
 	var li2=suffix.indexOf("/");
 	var ws="";
 	if(-1!=li2){
@@ -27,7 +27,7 @@ function hideOpt(msg){
 		ws+=suffix.substring(0,li2);
 	}
 	
-	document.body.style.border="green 2px solid";
+	// document.body.style.border="green 2px solid";
 
 	var sobj={};
 	// var dscripts=document.body.getElementsByTagName("script");
@@ -37,28 +37,48 @@ function hideOpt(msg){
 	// }
 	
 	var scripts=document.scripts;
-	console.log(scripts.length+"个<script>");
+	// console.log(scripts.length+"个<script>");
 	//ad {ad:{ws:{js:mm}}}
 	for(var i=0,len=scripts.length;i<len;i++){
 		if(scripts[i].src!=""){
-			console.log(scripts[i]);
+			//console.log(scripts[i]);
 			if((scripts[i].src.indexOf("http://")!=-1)||(scripts[i].src.indexOf("https://")!=-1)){
-				console.log(scripts[i]);
-				console.log("================");
+				//console.log(scripts[i]);
+				//console.log("================");
 				sobj[scripts[i].src]=mm;
-				console.log(sobj);
 			}
 		}
 	}
-	var obj = {};
-	obj[ws]=sobj;
-	browser.storage.local.set({"ad":obj});
+	// console.log(sobj);
+	
+	browser.storage.local.get("ad").then((result)=>{
+		if(result.hasOwnProperty("ad")){
+			//console.log(result.ad);
+			if(result.ad.hasOwnProperty(ws)){
+				//update
+				//console.log(result.ad.hasOwnProperty(ws));
+				for(k in sobj){
+					result.ad[ws][k]=sobj[k];
+				}
+			}else{
+				result.ad[ws]=sobj;
+			}
+			//console.log(result);
+			browser.storage.local.set(result);
+		}else{
+			var obj = {};
+			obj[ws]=sobj;
+			browser.storage.local.set({"ad":obj});
+		}
+		//及时通知backgroun.js,使得blockjs做出改变
+		browser.runtime.sendMessage({"type":"change"});
+	});
 }
 
 //接收从background.js发送的消息
-function getMessage(msg){
-	if(msg.type=="hidden"){
-		hideOpt(msg);
+function getMessage(info){
+	if(info.type=="hidden"){
+		hideOpt(info);
 	}
 }
 browser.runtime.onMessage.addListener(getMessage);

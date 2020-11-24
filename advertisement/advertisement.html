@@ -1,13 +1,64 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/record/record.css" />
-    <title>Advertisement</title>
-  </head>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/record/record.css" />
+		<title>Advertisement</title>
+		<style type="text/css">
+			ul li{
+				list-style-type:none;
+			}
+			ul,li{
+				padding:0;
+				margin:0;
+			}
+			.noti{
+				margin-top:10px;
+				margin-left:10px;
+				color:red;
+				width:40px;
+				height:40px;
+				line-height:40px;
+				font-size:18px;
+				text-align:center;
+				background-color: #90EE90;
+				cursor: pointer;
+			}
+			.noti:hover{
+				background-color:#4CAF50;
+			}
+			.showNoti{
+				display:none;
+			}
+			.noti:hover+.showNoti{
+				display:inline-block;
+				z-index:1;
+				padding:5px;
+				margin-left:10px;
+				font-size:14px;
+				color:gray;
+				background-color: #90EE90;
+			}
+		</style>
+	</head>
   <body>
+  	<div style="position:absolute;top:0;left:0;display:inline;">
+
+  		<div class="noti">注意</div>
+		<div class="showNoti">
+			<ul>
+				<li>1.右键点击【拦截广告】即可拦截该页面所有JavaScript</li>
+				<li>2.如果页面显示异常，有选择地删除该域名下的JavaScript</li>
+				<li>3.多数情况下删除该域名下的URL不影响拦截功能</li>
+				<li>4.非该域名下的URL，多数情况不用删除</li>
+				<li>5.非.js结尾的URL也有可能是JavaScript</li>
+			</ul>
+		</div>
+	</div>
+
     <div class="buttonContainer">
 		<div id="queryButton" class="optButton">查询</div><div id="clearButton" class="optButton">清空</div>
+	
 	</div>
     <table id="datagrid">
 		<tr style="height:30px;">

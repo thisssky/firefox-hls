@@ -12,33 +12,55 @@ function logURL(requestDetails) {
 }
 browser.webRequest.onBeforeRequest.addListener(logURL, {urls: ["<all_urls>"]});
 
-//初始化广告js
-var blockjs=[];
-function initBlockJS(){
-	//blockjs.push("https://v1.cnzz.com/z_stat.php?id=1278295498&web_id=1278295498");
-	blockjs.push("https://www.zxzj.me/slade1.js");
-	//blockjs.push("https://www.zxzj.me/slade2.js");
-	blockjs.push("https://3193.dlads.cn/alikes.php?id=6001");
-
-	blockjs.push("https://1274.dlads.cn/alikes.php?id=3103");
-
-	blockjs.push("https://pc.weizhenwx.com/pc_w/m_beitou.js");
-	blockjs.push("https://pc.weizhenwx.com/pc_w/m_rich.js");
-
-	blockjs.push("*://*/dm/ahead.js?v1");
-	blockjs.push("https://www.aassy19.com/dm/dingbu.js?v1=");
-	blockjs.push("https://www.aassy19.com/dm/dibu.js?v1=");
-	blockjs.push("https://hm.baidu.com/hm.js?0acbdd45de8598c27c20c14db605ac92=");
-	blockjs.push("https://www.pppf-dm.com/dm/bofangxia.js?v1");
-}
-initBlockJS();
-
 //过滤广告js
 function blockJS(requestDetails) {
-	console.log(requestDetails.url+"===========blockJS");
 	return {cancel: true};
 }
-//browser.webRequest.onBeforeRequest.addListener(blockJS, {urls: blockjs},["blocking"]);
+
+//初始化广告js
+var blockjs=[];
+async function initBlockJS(){
+	//blockjs.push("https://www.zxzj.me/");//禁止访问
+	//blockjs.push("https://www.zxzj.me/slade1.js");//top
+	//blockjs.push("https://3193.dlads.cn/alikes.php?id=6001");//right
+	
+	var ad="ad";
+	await browser.storage.local.get(ad).then(results => {
+		if(results.hasOwnProperty(ad)){
+			var wss = Object.keys(results[ad]);
+			//ad {ad:{ws:{js:mm}}}
+			
+			for (var i = 0; i < wss.length; i++) {
+				var url = wss[i];
+				var sobj = results[ad][url];//{js:mm}				
+				for(k in sobj){
+					blockjs.push(k);
+				}
+			}
+		}
+    });
+	if(blockjs.length!=0){
+		if(browser.webRequest.onBeforeRequest.hasListener(blockJS)){
+			browser.webRequest.onBeforeRequest.removeListener(blockJS);
+		}
+		await browser.webRequest.onBeforeRequest.addListener(blockJS, {urls: blockjs},["blocking"]);
+	}
+}
+
+initBlockJS();
+
+function changeBlockJS(){
+	blockjs.length=0;
+	initBlockJS();
+}
+//接收ad变化消息
+function getMessage(msg){
+	if(msg.type=="change"){
+		changeBlockJS();
+	}
+}
+browser.runtime.onMessage.addListener(getMessage);
+
 
 //进入record页面
 function openRecord(tabs) {
@@ -186,7 +208,17 @@ browser.contextMenus.create({
 });
 //监听菜单
 function clickMenu(info,tab){
-	browser.tabs.sendMessage(tab.id,{"type":"hidden","pageUrl":info.pageUrl});
+	// var para="";
+	// if(""!=info.linkUrl){
+		// para+="getByHref(\""+info.linkUrl+"\");";
+	// }if(""!=info.srcUrl){
+		// para+="getBySrc(\""+info.srcUrl+"\");";
+	// }
+	// browser.tabs.executeScript({
+		// code: myCode+para
+	// });
+	//info(linkUrl​,pageUrl，srcUrl)
+	browser.tabs.sendMessage(tab.id,{"type":"hidden","pageUrl":info.pageUrl,"linkUrl":info.linkUrl,"srcUrl":info.srcUrl});
 }
 browser.contextMenus.onClicked.addListener(clickMenu);
 
