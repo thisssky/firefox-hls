@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "HLS",
 	"description": "HLS",
-	"version": "0.0.2",
+	"version": "0.0.4",
 	"developer": {
 		"name": "qq1217268470",
 		"url": "https://github.com/1217268470/webextensions-hls"

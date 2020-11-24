@@ -203,7 +203,7 @@ function closeNotification(id) {
 //创建菜单
 browser.contextMenus.create({
     "id" : "hlsHiddenMenu",
-    "title" : "隐藏此元素",
+    "title" : "净化网页",
     "contexts" : ["all"]
 });
 //监听菜单
