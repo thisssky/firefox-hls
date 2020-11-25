@@ -58,18 +58,10 @@ function quickSort(A, p = 0, r) {
     return A;
 }
 
-
-/*
-启动，连接原生应用
-*/
-var port="";
-
+//给background.js通信
 function downloadOpt(obj){
-	if(""==port){
-		port = browser.runtime.connectNative("m3u8");
-	}
 	var url=obj.getAttribute("url");
-	port.postMessage({"type":"download","url":url});
+	browser.runtime.sendMessage({"type":"download","url":url});
 }
 
 function updateRowIndex(obj) {

@@ -20,9 +20,6 @@ function blockJS(requestDetails) {
 //初始化广告js
 var blockjs=[];
 async function initBlockJS(){
-	//blockjs.push("https://www.zxzj.me/");//禁止访问
-	//blockjs.push("https://www.zxzj.me/slade1.js");//top
-	//blockjs.push("https://3193.dlads.cn/alikes.php?id=6001");//right
 	
 	var ad="ad";
 	await browser.storage.local.get(ad).then(results => {
@@ -53,10 +50,27 @@ function changeBlockJS(){
 	blockjs.length=0;
 	initBlockJS();
 }
+/*
+启动，连接原生应用
+*/
+var port="";
 //接收ad变化消息
 function getMessage(msg){
+	console.log("bget");
 	if(msg.type=="change"){
 		changeBlockJS();
+	}
+	if(msg.type=="download"){
+		if(""==port){
+			port = browser.runtime.connectNative("m3u8");
+			port.onMessage.addListener((res) => {
+				if(res.type=="app"){
+					port.disconnect();
+					port="";
+				}
+			});
+		}
+		port.postMessage({"type":"download","url":msg.url});
 	}
 }
 browser.runtime.onMessage.addListener(getMessage);
