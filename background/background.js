@@ -56,7 +56,6 @@ function changeBlockJS(){
 var port="";
 //接收ad变化消息
 function getMessage(msg){
-	console.log("bget");
 	if(msg.type=="change"){
 		changeBlockJS();
 	}
