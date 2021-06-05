@@ -1,5 +1,8 @@
-# webextensions-hls
+# firefox-hls
 # 火狐插件[https://addons.mozilla.org/zh-CN/firefox/addon/hls/](https://addons.mozilla.org/zh-CN/firefox/addon/hls/)
+
+
+# 谷歌插件[https://github.com/1217268470/chrome-hls](https://github.com/1217268470/chrome-hls)
 
 ## 【功能】
 
