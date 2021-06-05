@@ -77,14 +77,26 @@ browser.runtime.onMessage.addListener(getMessage);
 
 //进入record页面
 function openRecord(tabs) {
-    if (tabs.length == 0) {
+    // if (tabs.length == 0) {
+        // browser.tabs.create({
+            // "url": browser.extension.getURL("record/record.html")
+        // });
+    // } else {
+        // browser.tabs.highlight({
+            // "tabs": tabs[0].index
+        // });
+    // }
+	if (tabs.length == 0) {
         browser.tabs.create({
+			"index": 0,
             "url": browser.extension.getURL("record/record.html")
         });
     } else {
         browser.tabs.highlight({
             "tabs": tabs[0].index
         });
+		browser.tabs.move(tabs[0].id,{"index":0}, function (){});
+
     }
 
 }
@@ -216,7 +228,7 @@ function closeNotification(id) {
 //创建菜单
 browser.contextMenus.create({
     "id" : "hlsHiddenMenu",
-    "title" : "净化网页",
+    "title" : "HLS",
     "contexts" : ["all"]
 });
 //监听菜单
@@ -231,7 +243,23 @@ function clickMenu(info,tab){
 		// code: myCode+para
 	// });
 	//info(linkUrl​,pageUrl，srcUrl)
-	browser.tabs.sendMessage(tab.id,{"type":"hidden","pageUrl":info.pageUrl,"linkUrl":info.linkUrl,"srcUrl":info.srcUrl});
+	//browser.tabs.sendMessage(tab.id,{"type":"hidden","pageUrl":info.pageUrl,"linkUrl":info.linkUrl,"srcUrl":info.srcUrl});
+	var record = browser.extension.getURL("record/record.html");
+    browser.tabs.query({
+        "url": record
+    },function(tabs){
+		if (tabs.length == 0) {
+			browser.tabs.create({
+				"index": 0,
+				"url": browser.extension.getURL("record/record.html")
+			});
+		} else {
+			browser.tabs.highlight({
+				"tabs": tabs[0].index
+			});
+			browser.tabs.move(tabs[0].id,{"index":0}, function (){});
+		}
+	});
 }
 browser.contextMenus.onClicked.addListener(clickMenu);
 

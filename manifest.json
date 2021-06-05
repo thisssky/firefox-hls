@@ -2,10 +2,10 @@
 	"manifest_version": 2,
 	"name": "HLS",
 	"description": "HLS",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"developer": {
 		"name": "qq1217268470",
-		"url": "https://github.com/1217268470/webextensions-hls"
+		"url": "https://github.com/1217268470/firefox-hls"
 	},
 	"icons": {
 		"64": "icons/icon.png"
@@ -41,7 +41,6 @@
 			"64": "icons/icon.png"
 		},
 		"browser_style": true,
-		"default_popup": "popup/popup.html",
 		"default_title": "HLS"
 	},
 	"content_scripts": [
