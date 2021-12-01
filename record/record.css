@@ -93,6 +93,9 @@ th{
 	border-left:solid 1px red;
 	border-top:solid 1px red;
 }
+tr:hover{
+	background-color:#90EE90;
+}
 td{
 	padding:0;
 	border-left:solid 1px red;

@@ -180,10 +180,8 @@ function getAll() {
     var gettingAllStorageItems = browser.storage.local.get();
     gettingAllStorageItems.then((results) => {
         //{"sss":{mm:mm,url:url},"yyy":{mm:mm,url:url}}
-		//过滤隐藏
-		var fh="ad";
-		if(results.hasOwnProperty(fh)){
-			delete results[fh];
+		if(results.hasOwnProperty("filter")){
+			delete results["filter"];
 		}
         var arr = Object.keys(results);
         if (arr.length == 0) {
@@ -208,10 +206,8 @@ function getAll() {
 function clearAll() {
 	var gettingAllStorageItems = browser.storage.local.get();
     gettingAllStorageItems.then((results) => {
-		//过滤js
-		var fh="ad";
-		if(results.hasOwnProperty(fh)){
-			delete results[fh];
+		if(results.hasOwnProperty("filter")){
+			delete results["filter"];
 		}
 		
 		var arr = Object.keys(results);
@@ -278,12 +274,67 @@ window.onresize = function(){
 }
 
 function init() {
-    document.getElementById("queryButton").addEventListener("click", getAll);
+	document.getElementById("queryButton").addEventListener("click", getAll);
     //document.getElementById("copyButton").addEventListener("click", copy);
     document.getElementById("clearButton").addEventListener("click", clearAll);
 	//document.getElementById("dwo").addEventListener("click", downloadOpt);
+	var fs=document.getElementsByName("filter");
+	for(var i=0;i<fs.length;i++){
+		var obj=fs[i];
+		obj.addEventListener("click",function(){
+			browser.storage.local.get("filter").then((results) => {
+				if(results.hasOwnProperty("filter")){
+					var farr = results["filter"];
+					if(this.checked){
+						if(farr.indexOf(this.value)==-1){
+							farr.push(this.value);
+						}
+					}else{
+						if(farr.indexOf(this.value)!=-1){
+							farr.splice(farr.indexOf(this.value),1);
+						}
+					}
+					browser.storage.local.set(results);
+					//
+					browser.runtime.sendMessage({"type":"filter","filter":farr});
+
+				}
+			});
+		});
+	}
 	resizeContent();
 	getAll();
+	//setting
+	//{filter:[]}
+	browser.storage.local.get("filter").then((results) => {
+		var setting = Object.keys(results);
+		if(results.hasOwnProperty("filter")&&results["filter"].length>0){
+			var farr = results["filter"];
+			for(f in farr){
+				var fobjs=document.getElementsByName("filter");
+				for(o in fobjs){
+					if(fobjs[o].value==farr[f]){
+						fobjs[o].checked=true;
+					}
+				}
+			}
+		}else{
+			browser.storage.local.set({"filter":[".m3u8"]});
+			document.getElementById("m3u8Checkbox").checked=true;
+		}
+	});
+	document.getElementById("settingButton").addEventListener("click", function(){
+		var h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		var mask=document.getElementById("mask");
+		mask.style.height=h-100+"px";
+		mask.style.display = "block";
+		var cloneSettingNode=this.cloneNode(true);
+		cloneSettingNode.removeAttribute("id");
+		document.getElementById("cloneSetting").appendChild(cloneSettingNode);
+		cloneSettingNode.addEventListener("click",function(){
+			mask.style.display="none";
+		});
+	});
 }
 
 //初始化

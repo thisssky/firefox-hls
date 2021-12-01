@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "HLS",
 	"description": "HLS",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"developer": {
 		"name": "qq1217268470",
 		"url": "https://github.com/1217268470/firefox-hls"

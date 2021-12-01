@@ -1,14 +1,11 @@
 //过滤url
+var filters=[];
 function logURL(requestDetails) {
-    if (requestDetails.url.indexOf(".m3u8") != -1) {
-        save2(requestDetails.url, "m3u8");
-    }
-    if (requestDetails.url.indexOf(".mp4") != -1) {
-        save2(requestDetails.url, "mp4");
-    }
-    if (requestDetails.url.indexOf(".flv") != -1) {
-        save2(requestDetails.url, "flv");
-    }
+	for(var i=0;i<filters.length;i++){
+		if (requestDetails.url.indexOf(filters[i]) != -1) {
+			save2(requestDetails.url, filters[i]);
+		}
+	}
 }
 browser.webRequest.onBeforeRequest.addListener(logURL, {urls: ["<all_urls>"]});
 
@@ -44,7 +41,16 @@ async function initBlockJS(){
 	}
 }
 
-initBlockJS();
+//initBlockJS();
+
+function initFilter(){
+	browser.storage.local.get("filter").then(results => {
+		if(results.hasOwnProperty("filter")&&results["filter"].length>0){
+			filters=results["filter"];
+		}
+	});
+}
+initFilter();
 
 function changeBlockJS(){
 	blockjs.length=0;
@@ -70,6 +76,10 @@ function getMessage(msg){
 			});
 		}
 		port.postMessage({"type":"download","url":msg.url});
+	}
+	//filter
+	if(msg.type=="filter"){
+		filters=msg.filter;
 	}
 }
 browser.runtime.onMessage.addListener(getMessage);

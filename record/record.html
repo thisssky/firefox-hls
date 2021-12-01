@@ -1,11 +1,63 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Record</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="record.css" />
-    <title>Record</title>
+	<style type="text/css">
+			
+		.setting{
+			position:absolute;
+			top:30px;
+			left:30px;
+			width:40px;
+			height:40px;
+			background-color: #90EE90;
+			cursor: pointer;
+			border-radius:4px;
+		}
+		.settingBlock{
+			display:inline-block;
+			position:absolute;
+			background-color:#1C1C1C;
+			height:6px;
+			width:28px;
+			margin-left:6px;
+			border-radius:3px;
+			margin-top:6px;
+		}
+		.setting:hover{
+			background-color:#4CAF50;
+		}
+		
+		.mask{
+			width:100%;
+			z-index:1;
+			display:none;
+			position:absolute;
+		}
+			
+	</style>
   </head>
+  
   <body>
+	<div class="setting" id="settingButton">
+		<div class="settingBlock"></div>
+		<div class="settingBlock" style="margin-top:18px;"></div>
+		<div class="settingBlock" style="margin-top:30px;"></div>
+	</div>
+  	<div class="mask" id="mask">
+		<div id="cloneSetting" style="background-color:LightGray;height:100px;"></div>
+		<div style="background-color:gray;height:100%;">
+			<div>
+			<span>【过滤类型】</span>
+			<label><input name="filter" id="m3u8Checkbox" type="checkbox" value=".m3u8" />m3u8</label>
+			<label><input name="filter" id="mp4Checkbox" type="checkbox" value=".mp4" />mp4</label>
+			<label><input name="filter" id="flvCheckbox" type="checkbox" value=".flv" />flv</label>
+			</div>
+		</div>
+	</div>
+	
     <div class="buttonContainer">
 		<!-- <div id="copyButton" class="optButton">复制</div> -->
 		<div id="queryButton" class="optButton">查询</div><div id="clearButton" class="optButton">清空</div>
@@ -57,7 +109,8 @@
 		<div id="noContent" style="font-size:72px;height:100px;display:inline-block;width:360px;text-align:center;">没有数据!</div>
 	</div>
 	<textarea id="copyContent" style="top:-99999px;position:absolute;opacity:0.0;width:1px;height:1px;"></textarea>
-    <script src="record.js"></script>
+
+	<script src="record.js"></script>
 
   </body>
 </html>
